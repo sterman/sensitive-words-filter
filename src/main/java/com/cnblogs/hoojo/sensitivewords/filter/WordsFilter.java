@@ -1,6 +1,6 @@
 package com.cnblogs.hoojo.sensitivewords.filter;
 
-import com.cnblogs.hoojo.sensitivewords.common.NamedWords;
+import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 
 import java.util.Set;
 
@@ -14,7 +14,7 @@ public interface WordsFilter {
     /**
      * 关键字
      */
-    NamedWords getWords();
+    WordsCategory getWordsCategory();
 
     /**
      * 是否包含敏感字符
@@ -32,7 +32,7 @@ public interface WordsFilter {
      * @param content   被匹配的语句
      * @return 返回匹配的敏感词语集合
      */
-    Set<String> getWords(boolean partMatch, String content);
+    Set<String> match(boolean partMatch, String content);
 
     /**
      * html高亮敏感词

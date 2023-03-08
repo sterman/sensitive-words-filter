@@ -1,8 +1,8 @@
 package com.cnblogs.hoojo.sensitivewords.filter.dat;
 
-import com.cnblogs.hoojo.sensitivewords.common.NamedWords;
+import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.cnblogs.hoojo.sensitivewords.filter.BaseWordsFilter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 双数组算法过滤敏感词
@@ -17,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class DatFilter extends BaseWordsFilter<DatCacheNode> {
 
-    public DatFilter(NamedWords wordSet) {
+    public DatFilter(WordsCategory wordSet) {
         super(wordSet);
     }
 

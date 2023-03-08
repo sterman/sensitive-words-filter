@@ -1,9 +1,9 @@
 package com.cnblogs.hoojo.sensitivewords.filter.bucket;
 
-import com.cnblogs.hoojo.sensitivewords.common.NamedWords;
+import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.cnblogs.hoojo.sensitivewords.filter.BaseWordsFilter;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public final class HashBucketFilter extends BaseWordsFilter<Map<Character, Map<Integer, Set<String>>>> {
 
-    public HashBucketFilter(NamedWords wordSet) {
+    public HashBucketFilter(WordsCategory wordSet) {
         super(wordSet);
     }
 

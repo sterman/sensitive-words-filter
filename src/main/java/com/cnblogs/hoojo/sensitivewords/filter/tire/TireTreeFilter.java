@@ -1,8 +1,8 @@
 package com.cnblogs.hoojo.sensitivewords.filter.tire;
 
-import com.cnblogs.hoojo.sensitivewords.common.NamedWords;
+import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.cnblogs.hoojo.sensitivewords.filter.BaseWordsFilter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * tire tree 算法脱敏词库支持类
@@ -17,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class TireTreeFilter extends BaseWordsFilter<TireTreeNode> {
 
-    public TireTreeFilter(NamedWords wordSet) {
+    public TireTreeFilter(WordsCategory wordSet) {
         super(wordSet);
     }
 

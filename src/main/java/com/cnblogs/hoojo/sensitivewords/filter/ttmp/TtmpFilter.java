@@ -1,8 +1,8 @@
 package com.cnblogs.hoojo.sensitivewords.filter.ttmp;
 
-import com.cnblogs.hoojo.sensitivewords.common.NamedWords;
+import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.cnblogs.hoojo.sensitivewords.filter.BaseWordsFilter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * ttmp 过滤明干成实现
@@ -18,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class TtmpFilter extends BaseWordsFilter<TtmpCacheNode> {
 
-    public TtmpFilter(NamedWords wordSet) {
+    public TtmpFilter(WordsCategory wordSet) {
         super(wordSet);
     }
 

@@ -1,12 +1,12 @@
 package com.cnblogs.hoojo.sensitivewords.context;
 
 import com.cnblogs.hoojo.sensitivewords.common.ApplicationLogging;
-import com.cnblogs.hoojo.sensitivewords.common.NamedWords;
+import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.cnblogs.hoojo.sensitivewords.exception.CreateWordsFilterException;
 import com.cnblogs.hoojo.sensitivewords.exception.WordsFilterContextNotInitializedException;
 import com.cnblogs.hoojo.sensitivewords.filter.WordsFilter;
+import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
-import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
@@ -18,15 +18,15 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public final class DefaultWordsFilterContext extends ApplicationLogging implements WordsFilterContext {
 
     private final FilterType type;
-    private final Map<String, NamedWords> rawWordSets;
+    private final Map<String, WordsCategory> rawWordSets;
     private final Map<String, WordsFilter> wordsFilters;
 
-    private DefaultWordsFilterContext(FilterType type, Collection<NamedWords> rawWordSets) throws CreateWordsFilterException {
+    private DefaultWordsFilterContext(FilterType type, Collection<WordsCategory> rawWordSets) throws CreateWordsFilterException {
         this.type = type;
         this.rawWordSets = new ConcurrentSkipListMap<>();
         this.wordsFilters = new ConcurrentSkipListMap<>();
 
-        for (NamedWords rawWordSet : rawWordSets) {
+        for (WordsCategory rawWordSet : rawWordSets) {
             createOrUpdate(rawWordSet);
         }
     }
@@ -39,7 +39,7 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
      * @return 新的独立过滤器上下文
      * @throws CreateWordsFilterException
      */
-    public static DefaultWordsFilterContext build(FilterType type, Collection<NamedWords> rawWordSets) throws CreateWordsFilterException {
+    public static DefaultWordsFilterContext build(FilterType type, Collection<WordsCategory> rawWordSets) throws CreateWordsFilterException {
         DefaultWordsFilterContext context = new DefaultWordsFilterContext(type, rawWordSets);
         return context;
     }
@@ -52,9 +52,9 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
      * @return 新过滤器
      * @throws CreateWordsFilterException
      */
-    public static WordsFilter buildFilter(FilterType filterType, NamedWords wordSet) throws CreateWordsFilterException {
+    public static WordsFilter buildFilter(FilterType filterType, WordsCategory wordSet) throws CreateWordsFilterException {
         try {
-            Constructor<? extends WordsFilter> constructor = filterType.getClazz().getConstructor(NamedWords.class);
+            Constructor<? extends WordsFilter> constructor = filterType.getClazz().getConstructor(WordsCategory.class);
             return constructor.newInstance(wordSet);
         } catch (Exception e) {
             throw new CreateWordsFilterException("创建WordsFilter对象失败", e);
@@ -62,9 +62,24 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
     }
 
     private static void checkContent(String content) {
-        if (StringUtils.isBlank(content)) {
+        if (Strings.isNullOrEmpty(content)) {
             throw new IllegalArgumentException("content不能为空");
         }
+    }
+
+    @Override
+    public FilterType getType() {
+        return type;
+    }
+
+    @Override
+    public Map<String, WordsCategory> getRawWordSets() {
+        return rawWordSets;
+    }
+
+    @Override
+    public Map<String, WordsFilter> getWordsFilters() {
+        return wordsFilters;
     }
 
     /**
@@ -75,7 +90,7 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
      * @throws CreateWordsFilterException
      */
     @Override
-    public WordsFilter createOrUpdate(NamedWords rawWordSet) throws CreateWordsFilterException {
+    public WordsFilter createOrUpdate(WordsCategory rawWordSet) throws CreateWordsFilterException {
         this.rawWordSets.put(rawWordSet.getCategory(), rawWordSet);
 
         WordsFilter wordsFilter = buildFilter(this.type, rawWordSet);
@@ -99,8 +114,8 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
         for (WordsFilter filter : this.wordsFilters.values()) {
             boolean filterResult = filter.contains(partMatch, content);
             finalResult = finalResult || filterResult;
-            if (interceptor != null && !interceptor.perFilter(filter.getName(), filter.getWords().getCategory(), filterResult)) {
-                return finalResult;
+            if (interceptor != null && !interceptor.perFilter(filter.getName(), filter.getWordsCategory().getCategory(), filterResult)) {
+                break;
             }
         }
         return finalResult;
@@ -114,8 +129,8 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
      * @return 是否包含敏感字符
      */
     @Override
-    public Set<String> getWords(boolean partMatch, String content) {
-        return getWords(partMatch, content, null);
+    public Set<String> match(boolean partMatch, String content) {
+        return match(partMatch, content, null);
     }
 
     /**
@@ -127,14 +142,14 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
      * @return 返回匹配的敏感词语集合
      */
     @Override
-    public Set<String> getWords(boolean partMatch, String content, FilterInterceptor<Set<String>> interceptor) {
+    public Set<String> match(boolean partMatch, String content, FilterInterceptor<Set<String>> interceptor) {
         checkContent(content);
         HashSet<String> finalResult = Sets.newHashSet();
         for (WordsFilter filter : this.wordsFilters.values()) {
-            Set<String> filterResult = filter.getWords(partMatch, content);
-            filterResult.addAll(filterResult);
-            if (interceptor != null && !interceptor.perFilter(filter.getName(), filter.getWords().getCategory(), filterResult)) {
-                return finalResult;
+            Set<String> filterResult = filter.match(partMatch, content);
+            finalResult.addAll(filterResult);
+            if (interceptor != null && !interceptor.perFilter(filter.getName(), filter.getWordsCategory().getCategory(), filterResult)) {
+                break;
             }
         }
         return finalResult;
@@ -166,8 +181,8 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
         String finalResult = content;
         for (WordsFilter filter : this.wordsFilters.values()) {
             finalResult = filter.highlight(partMatch, finalResult);
-            if (interceptor != null && !interceptor.perFilter(filter.getName(), filter.getWords().getCategory(), finalResult)) {
-                return finalResult;
+            if (interceptor != null && !interceptor.perFilter(filter.getName(), filter.getWordsCategory().getCategory(), finalResult)) {
+                break;
             }
         }
         return finalResult;
@@ -184,7 +199,7 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
      */
     @Override
     public String filter(boolean partMatch, String content, Character replaceChar) {
-        return filter(partMatch, content, replaceChar);
+        return filter(partMatch, content, replaceChar, null);
     }
 
     /**
@@ -203,8 +218,8 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
         String finalResult = content;
         for (WordsFilter filter : this.wordsFilters.values()) {
             finalResult = filter.filter(partMatch, finalResult, replaceChar);
-            if (interceptor != null && !interceptor.perFilter(filter.getName(), filter.getWords().getCategory(), finalResult)) {
-                return finalResult;
+            if (interceptor != null && !interceptor.perFilter(filter.getName(), filter.getWordsCategory().getCategory(), finalResult)) {
+                break;
             }
         }
         return finalResult;
@@ -237,7 +252,7 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
          * @return 过滤器上下文
          * @throws CreateWordsFilterException
          */
-        public static DefaultWordsFilterContext reloadContext(FilterType type, Collection<NamedWords> rawWordSets) throws CreateWordsFilterException {
+        public static DefaultWordsFilterContext reloadContext(FilterType type, Collection<WordsCategory> rawWordSets) throws CreateWordsFilterException {
             DefaultWordsFilterContext context = build(type, rawWordSets);
             CONTEXT_CACHE.put(type, context);
             return context;
@@ -252,7 +267,7 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
          * @throws WordsFilterContextNotInitializedException
          * @throws CreateWordsFilterException
          */
-        public static WordsFilter reloadFilter(FilterType type, NamedWords rawWordSet) throws WordsFilterContextNotInitializedException, CreateWordsFilterException {
+        public static WordsFilter reloadFilter(FilterType type, WordsCategory rawWordSet) throws WordsFilterContextNotInitializedException, CreateWordsFilterException {
             WordsFilterContext context = getContext(type);
             return context.createOrUpdate(rawWordSet);
         }

@@ -1,9 +1,9 @@
 package com.cnblogs.hoojo.sensitivewords.filter.simhash;
 
-import com.cnblogs.hoojo.sensitivewords.common.NamedWords;
+import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.cnblogs.hoojo.sensitivewords.filter.BaseWordsFilter;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public final class SimHashFilter extends BaseWordsFilter<Map<Character, Map<String, Set<String>>>> {
 
-    public SimHashFilter(NamedWords wordSet) {
+    public SimHashFilter(WordsCategory wordSet) {
         super(wordSet);
     }
 

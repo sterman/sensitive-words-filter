@@ -1,9 +1,9 @@
 package com.cnblogs.hoojo.sensitivewords.filter.dfa;
 
-import com.cnblogs.hoojo.sensitivewords.common.NamedWords;
+import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.cnblogs.hoojo.sensitivewords.filter.BaseWordsFilter;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 
@@ -20,7 +20,7 @@ import java.util.HashMap;
  */
 public final class DfaFilter extends BaseWordsFilter<HashMap<Character, DfaNode>> {
 
-    public DfaFilter(NamedWords wordSet) {
+    public DfaFilter(WordsCategory wordSet) {
         super(wordSet);
     }
 

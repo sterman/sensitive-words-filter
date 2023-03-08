@@ -1,7 +1,7 @@
 package com.cnblogs.hoojo.sensitivewords.filter;
 
 import com.cnblogs.hoojo.sensitivewords.common.ApplicationLogging;
-import com.cnblogs.hoojo.sensitivewords.common.NamedWords;
+import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
@@ -11,14 +11,14 @@ import java.util.Set;
 public abstract class BaseWordsFilter<S> extends ApplicationLogging implements WordsFilter {
 
     private static final String HTML_HIGHLIGHT = "<font color='red'>%s</font>";
-    private final NamedWords words;
+    private final WordsCategory wordsCategory;
     private final String name;
     private final S state;
 
-    public BaseWordsFilter(NamedWords words) {
-        this.words = words;
-        this.name = String.format("%s|%s", this.getName(), words.getCategory());
-        this.state = load(words);
+    public BaseWordsFilter(WordsCategory wordsCategory) {
+        this.wordsCategory = wordsCategory;
+        this.name = String.format("%s|%s", this.getClass().getSimpleName(), wordsCategory.getCategory());
+        this.state = load(wordsCategory);
     }
 
     @Override
@@ -27,15 +27,15 @@ public abstract class BaseWordsFilter<S> extends ApplicationLogging implements W
     }
 
     @Override
-    public NamedWords getWords() {
-        return words;
+    public WordsCategory getWordsCategory() {
+        return wordsCategory;
     }
 
     public S getState() {
         return state;
     }
 
-    protected S load(NamedWords wordSet) {
+    protected S load(WordsCategory wordSet) {
         S state = createState();
         loadStart(wordSet, state);
         for (String s : wordSet.getWords()) {
@@ -47,11 +47,11 @@ public abstract class BaseWordsFilter<S> extends ApplicationLogging implements W
 
     protected abstract S createState();
 
-    protected void loadStart(NamedWords wordSet, S state) {
+    protected void loadStart(WordsCategory wordSet, S state) {
 
     }
 
-    protected void loadCompete(NamedWords wordSet, S state) {
+    protected void loadCompete(WordsCategory wordSet, S state) {
 
     }
 
@@ -81,7 +81,7 @@ public abstract class BaseWordsFilter<S> extends ApplicationLogging implements W
     }
 
     @Override
-    public Set<String> getWords(boolean partMatch, String content) throws RuntimeException {
+    public Set<String> match(boolean partMatch, String content) throws RuntimeException {
         final Set<String> words = Sets.newHashSet();
 
         processor(partMatch, content, new Callback() {
@@ -97,7 +97,7 @@ public abstract class BaseWordsFilter<S> extends ApplicationLogging implements W
 
     @Override
     public String highlight(boolean partMatch, String content) throws RuntimeException {
-        Set<String> words = this.getWords(partMatch, content);
+        Set<String> words = this.match(partMatch, content);
 
         Iterator<String> iter = words.iterator();
         while (iter.hasNext()) {
@@ -110,7 +110,7 @@ public abstract class BaseWordsFilter<S> extends ApplicationLogging implements W
 
     @Override
     public String filter(boolean partMatch, String content, char replaceChar) throws RuntimeException {
-        Set<String> words = this.getWords(partMatch, content);
+        Set<String> words = this.match(partMatch, content);
 
         Iterator<String> iter = words.iterator();
         while (iter.hasNext()) {

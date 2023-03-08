@@ -1,12 +1,19 @@
 package com.cnblogs.hoojo.sensitivewords.context;
 
-import com.cnblogs.hoojo.sensitivewords.common.NamedWords;
+import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.cnblogs.hoojo.sensitivewords.exception.CreateWordsFilterException;
 import com.cnblogs.hoojo.sensitivewords.filter.WordsFilter;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface WordsFilterContext {
+
+    FilterType getType();
+
+    Map<String, WordsCategory> getRawWordSets();
+
+    Map<String, WordsFilter> getWordsFilters();
 
     /**
      * 创建或更新已有的过滤器
@@ -15,7 +22,7 @@ public interface WordsFilterContext {
      * @return
      * @throws CreateWordsFilterException
      */
-    WordsFilter createOrUpdate(NamedWords rawWordSet) throws CreateWordsFilterException;
+    WordsFilter createOrUpdate(WordsCategory rawWordSet) throws CreateWordsFilterException;
 
     /**
      * 是否包含敏感字符
@@ -34,7 +41,7 @@ public interface WordsFilterContext {
      * @param content   被匹配内容
      * @return 是否包含敏感字符
      */
-    Set<String> getWords(boolean partMatch, String content);
+    Set<String> match(boolean partMatch, String content);
 
     /**
      * 返回匹配到的敏感词语
@@ -44,7 +51,7 @@ public interface WordsFilterContext {
      * @param interceptor
      * @return 返回匹配的敏感词语集合
      */
-    Set<String> getWords(boolean partMatch, String content, FilterInterceptor<Set<String>> interceptor);
+    Set<String> match(boolean partMatch, String content, FilterInterceptor<Set<String>> interceptor);
 
     /**
      * html高亮敏感词

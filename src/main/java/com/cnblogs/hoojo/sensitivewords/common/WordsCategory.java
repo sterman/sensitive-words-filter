@@ -6,11 +6,11 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.Set;
 
-public class NamedWords {
+public class WordsCategory {
     private final String category;
     private final Set<String> words;
 
-    public NamedWords(String category, Collection<String> words) {
+    public WordsCategory(String category, Collection<String> words) {
         if (Strings.isNullOrEmpty(category)) {
             throw new IllegalArgumentException("关键字分类不能为空");
         }
