@@ -9,7 +9,6 @@ import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,6 +20,7 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
     private final FilterType type;
     private final Map<String, NamedWords> rawWordSets;
     private final Map<String, WordsFilter> wordsFilters;
+
     private DefaultWordsFilterContext(FilterType type, Collection<NamedWords> rawWordSets) throws CreateWordsFilterException {
         this.type = type;
         this.rawWordSets = new ConcurrentSkipListMap<>();
@@ -32,19 +32,33 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
     }
 
     /**
+     * 使用指定的类型和词集，创建过滤器上下文实例
+     *
+     * @param type
+     * @param rawWordSets
+     * @return 新的独立过滤器上下文
+     * @throws CreateWordsFilterException
+     */
+    public static DefaultWordsFilterContext build(FilterType type, Collection<NamedWords> rawWordSets) throws CreateWordsFilterException {
+        DefaultWordsFilterContext context = new DefaultWordsFilterContext(type, rawWordSets);
+        return context;
+    }
+
+    /**
      * 使用指定的类型和词集，创建过滤器实例
      *
      * @param filterType
      * @param wordSet
      * @return 新过滤器
-     * @throws NoSuchMethodException
-     * @throws InvocationTargetException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
+     * @throws CreateWordsFilterException
      */
-    public static WordsFilter build(FilterType filterType, NamedWords wordSet) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Constructor<? extends WordsFilter> constructor = filterType.getClazz().getConstructor(NamedWords.class);
-        return constructor.newInstance(wordSet);
+    public static WordsFilter buildFilter(FilterType filterType, NamedWords wordSet) throws CreateWordsFilterException {
+        try {
+            Constructor<? extends WordsFilter> constructor = filterType.getClazz().getConstructor(NamedWords.class);
+            return constructor.newInstance(wordSet);
+        } catch (Exception e) {
+            throw new CreateWordsFilterException("创建WordsFilter对象失败", e);
+        }
     }
 
     private static void checkContent(String content) {
@@ -62,16 +76,12 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
      */
     @Override
     public WordsFilter createOrUpdate(NamedWords rawWordSet) throws CreateWordsFilterException {
-        try {
-            this.rawWordSets.put(rawWordSet.getCategory(), rawWordSet);
+        this.rawWordSets.put(rawWordSet.getCategory(), rawWordSet);
 
-            WordsFilter wordsFilter = build(this.type, rawWordSet);
-            this.wordsFilters.put(wordsFilter.getName(), wordsFilter);
+        WordsFilter wordsFilter = buildFilter(this.type, rawWordSet);
+        this.wordsFilters.put(wordsFilter.getName(), wordsFilter);
 
-            return wordsFilter;
-        } catch (Exception e) {
-            throw new CreateWordsFilterException("创建WordsFilter对象失败", e);
-        }
+        return wordsFilter;
     }
 
     /**
@@ -228,7 +238,7 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
          * @throws CreateWordsFilterException
          */
         public static DefaultWordsFilterContext reloadContext(FilterType type, Collection<NamedWords> rawWordSets) throws CreateWordsFilterException {
-            DefaultWordsFilterContext context = new DefaultWordsFilterContext(type, rawWordSets);
+            DefaultWordsFilterContext context = build(type, rawWordSets);
             CONTEXT_CACHE.put(type, context);
             return context;
         }

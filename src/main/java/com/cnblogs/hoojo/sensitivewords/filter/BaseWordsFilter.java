@@ -8,18 +8,6 @@ import com.google.common.collect.Sets;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
- * 敏感词库抽象接口实现
- *
- * @author hoojo
- * @version 1.0
- * @createDate 2018年2月2日 下午4:09:02
- * @file AbstractSensitiveWordsFilter.java
- * @package com.cnblogs.hoojo.sensitivewords
- * @project fengkong-service-provider
- * @blog http://hoojo.cnblogs.com
- * @email hoojo_@126.com
- */
 public abstract class BaseWordsFilter<S> extends ApplicationLogging implements WordsFilter {
 
     private static final String HTML_HIGHLIGHT = "<font color='red'>%s</font>";
