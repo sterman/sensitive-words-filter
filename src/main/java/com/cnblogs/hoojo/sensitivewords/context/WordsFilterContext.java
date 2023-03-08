@@ -4,17 +4,47 @@ import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.cnblogs.hoojo.sensitivewords.exception.CreateWordsFilterException;
 import com.cnblogs.hoojo.sensitivewords.filter.WordsFilter;
 
+import java.util.Collection;
 import java.util.Set;
 
 public interface WordsFilterContext {
 
+    /**
+     * 获取过滤器类型
+     *
+     * @return
+     */
     FilterType getType();
 
+    /**
+     * 获取关键字分类
+     *
+     * @return
+     */
     Set<String> getCategoryNames();
 
-    Set<String> getFilterNames();
+    /**
+     * 获取过滤器
+     *
+     * @return
+     */
+    Collection<WordsFilter> getFilters();
 
+    /**
+     * 判断是否包含指定分类的关键字过滤器
+     *
+     * @param category
+     * @return
+     */
     boolean containsCategory(String category);
+
+    /**
+     * 根据关键字分类获取过滤器
+     *
+     * @param category
+     * @return
+     */
+    WordsFilter getFilter(String category);
 
     /**
      * 创建或更新已有的过滤器
@@ -24,6 +54,14 @@ public interface WordsFilterContext {
      * @throws CreateWordsFilterException
      */
     WordsFilter createOrUpdate(WordsCategory rawWordSet) throws CreateWordsFilterException;
+
+    /**
+     * 移除关键字分类对应的过滤器
+     *
+     * @param category
+     * @return
+     */
+    WordsFilter remove(String category);
 
     /**
      * 是否包含敏感字符
