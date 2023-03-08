@@ -4,16 +4,17 @@ import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 import com.cnblogs.hoojo.sensitivewords.exception.CreateWordsFilterException;
 import com.cnblogs.hoojo.sensitivewords.filter.WordsFilter;
 
-import java.util.Map;
 import java.util.Set;
 
 public interface WordsFilterContext {
 
     FilterType getType();
 
-    Map<String, WordsCategory> getRawWordSets();
+    Set<String> getCategoryNames();
 
-    Map<String, WordsFilter> getWordsFilters();
+    Set<String> getFilterNames();
+
+    boolean containsCategory(String category);
 
     /**
      * 创建或更新已有的过滤器

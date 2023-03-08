@@ -18,15 +18,15 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public final class DefaultWordsFilterContext extends ApplicationLogging implements WordsFilterContext {
 
     private final FilterType type;
-    private final Map<String, WordsCategory> rawWordSets;
+    private final Map<String, WordsCategory> wordsCategories;
     private final Map<String, WordsFilter> wordsFilters;
 
-    private DefaultWordsFilterContext(FilterType type, Collection<WordsCategory> rawWordSets) throws CreateWordsFilterException {
+    private DefaultWordsFilterContext(FilterType type, Collection<WordsCategory> wordsCategories) throws CreateWordsFilterException {
         this.type = type;
-        this.rawWordSets = new ConcurrentSkipListMap<>();
+        this.wordsCategories = new ConcurrentSkipListMap<>();
         this.wordsFilters = new ConcurrentSkipListMap<>();
 
-        for (WordsCategory rawWordSet : rawWordSets) {
+        for (WordsCategory rawWordSet : wordsCategories) {
             createOrUpdate(rawWordSet);
         }
     }
@@ -73,13 +73,18 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
     }
 
     @Override
-    public Map<String, WordsCategory> getRawWordSets() {
-        return rawWordSets;
+    public Set<String> getCategoryNames() {
+        return wordsCategories.keySet();
     }
 
     @Override
-    public Map<String, WordsFilter> getWordsFilters() {
-        return wordsFilters;
+    public Set<String> getFilterNames() {
+        return wordsFilters.keySet();
+    }
+
+    @Override
+    public boolean containsCategory(String category) {
+        return this.wordsCategories.containsKey(category);
     }
 
     /**
@@ -91,10 +96,10 @@ public final class DefaultWordsFilterContext extends ApplicationLogging implemen
      */
     @Override
     public WordsFilter createOrUpdate(WordsCategory rawWordSet) throws CreateWordsFilterException {
-        this.rawWordSets.put(rawWordSet.getCategory(), rawWordSet);
-
         WordsFilter wordsFilter = buildFilter(this.type, rawWordSet);
         this.wordsFilters.put(wordsFilter.getName(), wordsFilter);
+
+        this.wordsCategories.put(rawWordSet.getCategory(), rawWordSet);
 
         return wordsFilter;
     }

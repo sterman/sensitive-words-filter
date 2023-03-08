@@ -4,6 +4,9 @@ import com.cnblogs.hoojo.sensitivewords.common.WordsCategory;
 
 import java.util.Set;
 
+/**
+ * 过滤器接口
+ */
 public interface WordsFilter {
 
     /**

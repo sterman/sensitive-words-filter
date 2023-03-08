@@ -6,6 +6,9 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * 关键字分类
+ */
 public class WordsCategory {
     private final String category;
     private final Set<String> words;

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DefaultWordsFilterContextTest {
 
@@ -73,8 +74,8 @@ public class DefaultWordsFilterContextTest {
         DefaultWordsFilterContext context = DefaultWordsFilterContext.build(FilterType.DFA, wordsCategoryList);
 
         Assert.assertNotNull(context);
-        Assert.assertEquals(context.getRawWordSets().size(), wordsCategoryList.size());
-        Assert.assertEquals(context.getWordsFilters().size(), wordsCategoryList.size());
+        Assert.assertEquals(context.getCategoryNames().size(), wordsCategoryList.size());
+        Assert.assertEquals(context.getFilterNames().size(), wordsCategoryList.size());
     }
 
     @Test
@@ -103,7 +104,22 @@ public class DefaultWordsFilterContextTest {
     @Test
     public void testContains() throws CreateWordsFilterException {
         DefaultWordsFilterContext context = DefaultWordsFilterContext.build(FilterType.DFA, wordsCategoryList);
-        boolean contains = context.contains(false, testContent, (filterName, wordsCategory, result) -> !result);
+        AtomicReference<String> hitCategory = new AtomicReference<>();
+        boolean contains = context.contains(
+                false,
+                testContent,
+                (filterName, wordsCategory, result) -> {
+                    if (result) {
+                        hitCategory.set(wordsCategory);
+                    }
+                    return !result;
+                }
+        );
+        if (contains) {
+            System.out.printf("content contains key words in category [%s]", hitCategory.get());
+        } else {
+            System.out.print("content does't contains any key words");
+        }
         Assert.assertTrue(contains);
     }
 
