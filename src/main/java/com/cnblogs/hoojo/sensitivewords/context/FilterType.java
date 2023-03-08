@@ -11,14 +11,6 @@ import com.google.common.base.MoreObjects;
 
 /**
  * 敏感词算法实现类型
- *
- * @author hoojo
- * @version 1.0
- * @createDate 2018年2月2日 下午4:28:11
- * @file FilterType.java
- * @project fengkong-service-provider
- * @blog http://hoojo.cnblogs.com
- * @email hoojo_@126.com
  */
 public enum FilterType {
 

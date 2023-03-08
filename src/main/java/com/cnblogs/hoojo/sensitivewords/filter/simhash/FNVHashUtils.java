@@ -5,15 +5,6 @@ import java.math.BigInteger;
 /**
  * http://blog.csdn.net/hustfoxy/article/details/23687239
  * https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
- *
- * @author hoojo
- * @version 1.0
- * @createDate 2018年3月22日 下午6:48:41
- * @file FNVHashUtils.java
- * @package com.cnblogs.hoojo.sensitivewords.filter.bucket.executor
- * @project fengkong-service-provider
- * @blog http://hoojo.cnblogs.com
- * @email hoojo_@126.com
  */
 public abstract class FNVHashUtils {
 

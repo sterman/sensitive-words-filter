@@ -9,14 +9,6 @@ import java.util.HashMap;
 
 /**
  * DFA 脱敏算法实现支持类
- *
- * @author hoojo
- * @version 1.0
- * @createDate 2018年2月9日 上午10:34:42
- * @file DfaFilterExecutor.java
- * @project fengkong-service-provider
- * @blog http://hoojo.cnblogs.com
- * @email hoojo_@126.com
  */
 public final class DfaFilter extends BaseWordsFilter<HashMap<Character, DfaNode>> {
 

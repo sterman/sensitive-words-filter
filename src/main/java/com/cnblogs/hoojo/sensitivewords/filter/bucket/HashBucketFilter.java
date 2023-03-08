@@ -12,15 +12,6 @@ import java.util.Set;
 
 /**
  * hash bucket 脱敏过滤算法实现
- *
- * @author hoojo
- * @version 1.0
- * @createDate 2018年3月21日 下午4:59:33
- * @file HashBucketFilterExecutor.java
- * @package com.cnblogs.hoojo.sensitivewords.filter.bucket.executor
- * @project fengkong-service-provider
- * @blog http://hoojo.cnblogs.com
- * @email hoojo_@126.com
  */
 public final class HashBucketFilter extends BaseWordsFilter<Map<Character, Map<Integer, Set<String>>>> {
 

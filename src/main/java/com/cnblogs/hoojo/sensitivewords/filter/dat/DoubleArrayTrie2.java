@@ -2,18 +2,6 @@ package com.cnblogs.hoojo.sensitivewords.filter.dat;
 
 /**
  * DoubleArrayTrie: Java implementation of Darts (Double-ARray Trie System)
- *
- * <p>
- * Copyright(C) 2001-2007 Taku Kudo &lt;taku@chasen.org&gt;<br />
- * Copyright(C) 2009 MURAWAKI Yugo &lt;murawaki@nlp.kuee.kyoto-u.ac.jp&gt;
- * Copyright(C) 2012 KOMIYA Atsushi &lt;komiya.atsushi@gmail.com&gt;
- * </p>
- *
- * <p>
- * The contents of this file may be used under the terms of either of the GNU
- * Lesser General Public License Version 2.1 or later (the "LGPL"), or the BSD
- * License (the "BSD").
- * </p>
  */
 
 import com.google.common.collect.Lists;

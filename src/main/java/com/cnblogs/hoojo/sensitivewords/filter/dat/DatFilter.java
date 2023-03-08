@@ -6,14 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 双数组算法过滤敏感词
- *
- * @author hoojo
- * @version 1.0
- * @createDate 2018年3月21日 下午3:28:21
- * @package com.cnblogs.hoojo.sensitivewords.filter.dat.exectuor
- * @project fengkong-service-provider
- * @blog http://hoojo.cnblogs.com
- * @email hoojo_@126.com
  */
 public final class DatFilter extends BaseWordsFilter<DatCacheNode> {
 

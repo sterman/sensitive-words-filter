@@ -14,15 +14,6 @@ import java.util.Set;
  * 由于simhash是对大文本进行比较，并且比较的是在支持分词的基础上对分词对象进行比较，进而确定相识度。
  * 故 在脱敏方面支持不是很友好，在大文本情况下，效率低下。
  * 改变情况，需要分词库支持。
- *
- * @author hoojo
- * @version 1.0
- * @createDate 2018年3月22日 上午11:07:47
- * @file SimHashFilterExecutor.java
- * @package com.cnblogs.hoojo.sensitivewords.filter.simhash.executor
- * @project fengkong-service-provider
- * @blog http://hoojo.cnblogs.com
- * @email hoojo_@126.com
  */
 public final class SimHashFilter extends BaseWordsFilter<Map<Character, Map<String, Set<String>>>> {
 

@@ -7,14 +7,6 @@ import java.util.Set;
 
 /**
  * dfa多叉树模型
- *
- * @author hoojo
- * @version 1.0
- * @createDate 2018年2月8日 下午8:23:27
- * @file DfaNode.java
- * @project fengkong-service-provider
- * @blog http://hoojo.cnblogs.com
- * @email hoojo_@126.com
  */
 public class DfaNode {
 

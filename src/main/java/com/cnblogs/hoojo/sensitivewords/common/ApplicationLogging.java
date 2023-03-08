@@ -5,11 +5,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 系统调试、操作、错误日志基类
- *
- * @author hoojo
- * @version 1.0
- * @createDate 2012-2-9 上午11:46:30
- * @file ApplicationLogging.java
  */
 public abstract class ApplicationLogging {
 

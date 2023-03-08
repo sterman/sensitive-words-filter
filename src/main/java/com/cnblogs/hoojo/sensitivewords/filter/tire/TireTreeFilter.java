@@ -6,14 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * tire tree 算法脱敏词库支持类
- *
- * @author hoojo
- * @version 1.0
- * @createDate 2018年2月9日 上午10:36:08
- * @file TireTreeFilterExecutor.java
- * @project fengkong-service-provider
- * @blog http://hoojo.cnblogs.com
- * @email hoojo_@126.com
  */
 public final class TireTreeFilter extends BaseWordsFilter<TireTreeNode> {
 
