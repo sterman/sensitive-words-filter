@@ -75,7 +75,7 @@ public class DefaultWordsFilterContextTest {
 
         Assert.assertNotNull(context);
         Assert.assertEquals(context.getCategoryNames().size(), wordsCategoryList.size());
-        Assert.assertEquals(context.getFilterNames().size(), wordsCategoryList.size());
+        Assert.assertEquals(context.getFilters().size(), wordsCategoryList.size());
     }
 
     @Test
